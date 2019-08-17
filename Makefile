@@ -9,8 +9,11 @@ OP  = -g
 CC  = gcc $(OP) $(INC)
 CO  = $(CC) -c
 
-main: main.c imgio.o ffimg.o
-	$(CC) ffimg.o main.c imgio.o -o main $(LPNG) $(LJPG) -lfftw3
+main: main.c libopenip.a
+	$(CC) main.c libopenip.a -o main $(LPNG) $(LJPG) -lfftw3
+
+libopenip.a: ffimg.o imgio.o
+	ar rcs libopenip.a ffimg.o imgio.o
 
 ffimg.o: ffimg.c 
 	$(CO) ffimg.c -o ffimg.o
@@ -20,5 +23,6 @@ imgio.o: imgio.c imgio.h openip_globals.h
 
 clean:
 	rm -f  *.o
+	rm -f  *.a
 	rm -rf *.dSYM
 	rm -f  main
